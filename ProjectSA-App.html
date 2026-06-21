@@ -1,0 +1,1649 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="default"/>
+<meta name="apple-mobile-web-app-title" content="Project SA"/>
+<meta name="theme-color" content="#3D2B1F"/>
+<title>Project SA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ivory:#FAF8F5;--rose:#F2D4D4;--rose-deep:#C08080;
+  --blue:#C5D5E4;--blue-deep:#7A9BB5;
+  --sand:#EDE5D8;--sand-deep:#B89A7A;
+  --espresso:#3D2B1F;--espresso-mid:#6B4C3B;
+  --cream:#F5F0E8;--white:#FFFFFF;
+  --green:#6FAF6F;--amber:#C9963A;--red:#C07070;
+  --text:#2C1F14;--text-mid:#6B5744;--text-soft:#9E8878;
+  --r:16px;--r-sm:10px;
+  --sh:0 2px 14px rgba(61,43,31,.09);
+  --sh-md:0 4px 28px rgba(61,43,31,.13);
+}
+html,body{height:100%;-webkit-tap-highlight-color:transparent}
+body{
+  font-family:'DM Sans',sans-serif;background:var(--ivory);color:var(--text);
+  -webkit-font-smoothing:antialiased;overflow-x:hidden;
+  max-width:430px;margin:0 auto;min-height:100vh;
+}
+h1,h2,h3,.serif{font-family:'DM Serif Display',serif}
+input[type=number]{-moz-appearance:textfield}
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button{-webkit-appearance:none}
+
+/* ── SCREENS ── */
+.screen{display:none;min-height:100vh;padding-bottom:84px}
+.screen.active{display:block}
+
+/* ── NAV ── */
+.nav{
+  position:fixed;bottom:0;left:50%;transform:translateX(-50%);
+  width:100%;max-width:430px;
+  background:rgba(255,255,255,.96);backdrop-filter:blur(16px);
+  border-top:1px solid var(--sand);display:flex;z-index:100;
+  padding:8px 0 max(8px,env(safe-area-inset-bottom));
+}
+.nav-btn{
+  flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;
+  border:none;background:none;cursor:pointer;padding:6px 0;
+  color:var(--text-soft);font-size:10px;font-family:'DM Sans',sans-serif;
+  font-weight:500;letter-spacing:.03em;transition:color .2s;
+}
+.nav-btn.active{color:var(--rose-deep)}
+.nav-icon{font-size:21px;line-height:1}
+
+/* ── HEADER ── */
+.hdr{
+  padding:max(52px,env(safe-area-inset-top)) 18px 18px;
+  background:linear-gradient(160deg,var(--cream) 0%,var(--ivory) 100%);
+  position:sticky;top:0;z-index:50;
+}
+.hdr-row{display:flex;justify-content:space-between;align-items:flex-start}
+.hdr-title{font-family:'DM Serif Display',serif;font-size:26px;color:var(--espresso);line-height:1.1}
+.hdr-sub{font-size:12px;color:var(--text-soft);margin-top:2px}
+.avatar{
+  width:38px;height:38px;border-radius:50%;border:none;cursor:pointer;
+  font-family:'DM Serif Display',serif;font-size:16px;color:#fff;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+
+/* ── CARDS ── */
+.card{background:var(--white);border-radius:var(--r);padding:16px;box-shadow:var(--sh);margin-bottom:12px}
+.card-title{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--text-soft);margin-bottom:12px}
+
+/* ── SECTION ── */
+.sec{padding:0 16px}
+
+/* ── CHALLENGE BANNER ── */
+.challenge{
+  background:linear-gradient(135deg,var(--espresso) 0%,var(--espresso-mid) 100%);
+  border-radius:var(--r);padding:18px 20px;margin:0 16px 12px;color:#fff;
+}
+.ch-label{font-size:11px;letter-spacing:.1em;text-transform:uppercase;opacity:.65;margin-bottom:4px}
+.ch-days{font-family:'DM Serif Display',serif;font-size:40px;line-height:1;margin-bottom:2px}
+.ch-sub{font-size:13px;opacity:.75;margin-bottom:14px}
+.prog-track{height:5px;background:rgba(255,255,255,.2);border-radius:3px;overflow:hidden}
+.prog-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--rose),var(--sand));transition:width .8s ease}
+.ch-meta{display:flex;justify-content:space-between;margin-top:6px;font-size:11px;opacity:.55}
+
+/* ── DUO GRID ── */
+.duo{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 16px;margin-bottom:12px}
+.pcard{background:var(--white);border-radius:var(--r);padding:14px 12px;box-shadow:var(--sh);position:relative;overflow:hidden}
+.pcard-bar{position:absolute;top:0;left:0;right:0;height:3px;border-radius:var(--r) var(--r) 0 0}
+.pcard-name{font-family:'DM Serif Display',serif;font-size:16px;color:var(--espresso);margin-bottom:2px;margin-top:2px}
+.ring-wrap{position:relative;width:52px;height:52px;flex-shrink:0}
+.ring-label{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:13px;font-weight:600;color:var(--espresso);line-height:1}
+.ring-label small{font-size:9px;font-weight:400;color:var(--text-soft)}
+.stat-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid var(--sand);font-size:11px}
+.stat-row:last-child{border-bottom:none}
+.stat-l{color:var(--text-soft)}
+.stat-v{font-weight:600;color:var(--espresso)}
+.react-btn{
+  position:absolute;bottom:10px;right:10px;background:var(--sand);
+  border:none;border-radius:20px;padding:3px 8px;font-size:14px;
+  cursor:pointer;transition:transform .15s;
+}
+.react-btn:active{transform:scale(1.35)}
+
+/* ── SCORE BAR ── */
+.score-wrap{background:var(--white);border-radius:var(--r);padding:16px;box-shadow:var(--sh);margin-bottom:12px}
+.score-hdr{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px}
+.score-num{font-family:'DM Serif Display',serif;font-size:34px;color:var(--espresso)}
+.score-badge{font-size:12px;font-weight:600;padding:3px 12px;border-radius:20px;color:#fff}
+.score-track{height:8px;background:var(--sand);border-radius:4px;overflow:hidden;margin-bottom:6px}
+.score-fill{height:100%;border-radius:4px;transition:width .6s ease}
+.score-meta{font-size:11px;color:var(--text-soft)}
+
+/* ── TABS ── */
+.tabs{display:flex;gap:5px;padding:4px;background:var(--sand);border-radius:12px;margin-bottom:14px}
+.tab{flex:1;padding:8px 4px;border:none;border-radius:9px;background:none;font-size:12px;font-weight:500;font-family:'DM Sans',sans-serif;cursor:pointer;color:var(--text-soft);transition:all .2s}
+.tab.on{background:var(--white);color:var(--espresso);box-shadow:0 1px 4px rgba(61,43,31,.1)}
+
+/* ── HABITS ── */
+.habit{display:flex;align-items:center;gap:12px;padding:14px 0;border-bottom:1px solid var(--sand)}
+.habit:last-child{border-bottom:none}
+.h-icon{font-size:20px;width:28px;text-align:center;flex-shrink:0}
+.h-body{flex:1;min-width:0}
+.h-label{font-size:14px;font-weight:500;color:var(--espresso);margin-bottom:1px}
+.h-sub{font-size:11px;color:var(--text-soft)}
+.h-ctrl{display:flex;align-items:center;gap:6px;flex-shrink:0}
+.chkbox{width:26px;height:26px;border-radius:8px;border:2px solid var(--sand-deep);background:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;transition:all .2s;flex-shrink:0}
+.chkbox.on{border-color:var(--green);background:var(--green);color:#fff}
+.num-in{width:70px;border:1.5px solid var(--sand);border-radius:var(--r-sm);padding:7px 8px;font-size:14px;font-family:'DM Sans',sans-serif;color:var(--espresso);background:var(--cream);text-align:right}
+.num-in:focus{outline:none;border-color:var(--rose-deep)}
+.unit{font-size:11px;color:var(--text-soft)}
+.sugar-btns{display:flex;gap:4px}
+.s-btn{padding:5px 9px;border-radius:20px;border:1.5px solid var(--sand);background:none;font-size:11px;font-weight:500;cursor:pointer;transition:all .2s;font-family:'DM Sans',sans-serif}
+.s-btn.c{background:var(--green);border-color:var(--green);color:#fff}
+.s-btn.sl{background:var(--amber);border-color:var(--amber);color:#fff}
+.s-btn.b{background:var(--red);border-color:var(--red);color:#fff}
+
+/* ── RUNS ── */
+.run-dot{width:32px;height:32px;border-radius:50%;border:2px solid var(--sand-deep);display:flex;align-items:center;justify-content:center;font-size:14px;cursor:pointer;transition:all .2s}
+.run-dot.on{background:var(--green);border-color:var(--green);color:#fff}
+.run-add{padding:5px 14px;border:1.5px solid var(--sand);border-radius:20px;background:none;font-size:12px;cursor:pointer;font-family:'DM Sans',sans-serif;color:var(--text-mid)}
+
+/* ── DATE NAV ── */
+.date-nav{display:flex;align-items:center;gap:8px;margin-bottom:0}
+.date-arrow{background:none;border:none;font-size:22px;cursor:pointer;color:var(--text-soft);padding:4px 8px;line-height:1}
+.date-mid{flex:1;text-align:center}
+.date-title{font-family:'DM Serif Display',serif;font-size:18px;color:var(--espresso)}
+.date-lock{font-size:11px;color:var(--red)}
+
+/* ── TEXTAREA / INPUTS ── */
+.txt-area{width:100%;border:1.5px solid var(--sand);border-radius:var(--r-sm);padding:12px;font-size:14px;font-family:'DM Sans',sans-serif;color:var(--espresso);background:var(--cream);resize:none;min-height:90px;line-height:1.6}
+.txt-area:focus{outline:none;border-color:var(--rose-deep)}
+.meas-in{border:1.5px solid var(--sand);border-radius:var(--r-sm);padding:10px 12px;font-size:15px;font-family:'DM Sans',sans-serif;color:var(--espresso);background:var(--cream);width:100%}
+.meas-in:focus{outline:none;border-color:var(--rose-deep)}
+.meas-label{font-size:11px;color:var(--text-soft);font-weight:500;margin-bottom:4px}
+.meas-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+
+/* ── BUTTONS ── */
+.btn{width:100%;padding:15px;background:var(--espresso);color:#fff;border:none;border-radius:var(--r);font-size:15px;font-weight:600;font-family:'DM Sans',sans-serif;cursor:pointer;margin-top:14px;letter-spacing:.02em;transition:opacity .2s,transform .15s}
+.btn:active{opacity:.85;transform:scale(.98)}
+.btn:disabled{opacity:.5}
+.btn.sec{background:none;color:var(--espresso);border:1.5px solid var(--sand-deep);margin-top:8px}
+.btn.sm{width:auto;padding:10px 18px;margin-top:0}
+
+/* ── STREAKS ── */
+.st-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.st-pill{background:var(--cream);border-radius:12px;padding:12px 14px;display:flex;align-items:center;gap:10px}
+.st-num{font-family:'DM Serif Display',serif;font-size:26px;color:var(--espresso);line-height:1}
+.st-name{font-size:11px;color:var(--text-soft)}
+
+/* ── ACHIEVEMENTS ── */
+.ach{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid var(--sand)}
+.ach:last-child{border-bottom:none}
+.ach-icon{font-size:28px}
+.ach-label{font-size:13px;font-weight:500;color:var(--espresso)}
+.ach-status{font-size:11px;color:var(--text-soft);margin-top:1px}
+.ach-badge{margin-left:auto;background:var(--green);color:#fff;border-radius:20px;padding:2px 8px;font-size:11px;font-weight:600}
+
+/* ── PENALTY ── */
+.pen-card{border-radius:var(--r);padding:16px;margin-bottom:12px;background:linear-gradient(135deg,#FFF5F5,#fff);border:1.5px solid var(--rose)}
+.pen-title{font-family:'DM Serif Display',serif;font-size:18px;color:var(--espresso);margin-bottom:4px}
+
+/* ── SPARKLINE ── */
+.spark{width:100%;overflow:hidden}
+
+/* ── INSIGHT ── */
+.insight{background:linear-gradient(135deg,var(--cream),var(--white));border-radius:var(--r);padding:14px 16px;margin-bottom:8px;border-left:3px solid var(--sand-deep);display:flex;gap:10px}
+.ins-icon{font-size:18px;flex-shrink:0;margin-top:1px}
+.ins-txt{font-size:13px;line-height:1.55;color:var(--text)}
+
+/* ── PHOTO ── */
+.photo-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.photo-slot{aspect-ratio:3/4;border-radius:10px;border:1.5px dashed var(--sand-deep);display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;background:var(--cream);font-size:24px;gap:4px;overflow:hidden;position:relative}
+.photo-slot img{width:100%;height:100%;object-fit:cover}
+.photo-slot-lbl{font-size:11px;color:var(--text-soft);font-weight:500}
+
+/* ── TOAST ── */
+#toast{position:fixed;top:24px;left:50%;transform:translateX(-50%) translateY(-60px);background:var(--espresso);color:#fff;padding:12px 22px;border-radius:24px;font-size:13px;font-weight:500;z-index:999;box-shadow:var(--sh-md);transition:transform .3s ease,opacity .3s ease;opacity:0;pointer-events:none;white-space:nowrap}
+#toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+
+/* ── MODAL ── */
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:200;display:none;align-items:flex-end}
+.modal-bg.open{display:flex}
+.modal{background:var(--white);border-radius:24px 24px 0 0;padding:22px 20px max(36px,env(safe-area-inset-bottom));width:100%;animation:slideUp .3s ease}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.modal-handle{width:36px;height:4px;background:var(--sand);border-radius:2px;margin:0 auto 18px}
+.modal-title{font-family:'DM Serif Display',serif;font-size:22px;color:var(--espresso);margin-bottom:14px}
+
+/* ── LOGIN ── */
+#login-screen{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 24px;background:linear-gradient(160deg,var(--cream) 0%,var(--ivory) 60%,var(--sand) 100%)}
+.login-logo{font-family:'DM Serif Display',serif;font-size:52px;color:var(--espresso);margin-bottom:4px;letter-spacing:-1px}
+.login-tag{font-size:14px;color:var(--text-soft);margin-bottom:44px;text-align:center;max-width:220px;line-height:1.55}
+.login-names{display:flex;align-items:center;gap:14px;margin-bottom:44px}
+.name-pill{padding:8px 18px;border-radius:20px;font-family:'DM Serif Display',serif;font-size:16px}
+.google-btn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;max-width:300px;padding:16px 24px;background:var(--espresso);color:#fff;border:none;border-radius:var(--r);font-size:15px;font-weight:600;font-family:'DM Sans',sans-serif;cursor:pointer;letter-spacing:.02em;box-shadow:var(--sh-md);transition:transform .15s,opacity .15s}
+.google-btn:active{transform:scale(.97)}
+.login-footer{margin-top:28px;font-size:11px;color:var(--text-soft);text-align:center;line-height:1.8}
+.login-err{color:var(--red);font-size:13px;margin-top:14px;text-align:center}
+
+/* ── ONBOARDING ── */
+#onboard-screen{min-height:100vh;padding:56px 20px 100px;display:flex;flex-direction:column;background:var(--ivory)}
+.ob-eye{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-soft);margin-bottom:8px}
+.ob-title{font-family:'DM Serif Display',serif;font-size:30px;color:var(--espresso);line-height:1.15;margin-bottom:8px}
+.ob-sub{font-size:14px;color:var(--text-soft);margin-bottom:28px;line-height:1.5}
+
+/* ── RECOMP ── */
+.recomp{background:linear-gradient(135deg,#EEF4F8,var(--white));border-radius:var(--r);padding:16px;border:1.5px solid var(--blue);margin-bottom:12px}
+
+/* ── WEEKLY SUMMARY CARD ── */
+.wk-card{background:linear-gradient(135deg,var(--espresso),var(--espresso-mid));border-radius:var(--r);padding:20px;color:#fff;margin-bottom:12px}
+.wk-week{font-size:11px;opacity:.6;letter-spacing:.08em;text-transform:uppercase;margin-bottom:5px}
+.wk-title{font-family:'DM Serif Display',serif;font-size:20px;margin-bottom:12px}
+.wk-scores{display:flex;gap:18px}
+.wk-person small{font-size:11px;opacity:.7}
+.wk-person div{font-family:'DM Serif Display',serif;font-size:26px}
+
+/* ── PROFILE ── */
+.prof-hdr{background:linear-gradient(135deg,var(--cream),var(--white));padding:32px 20px 20px;display:flex;align-items:center;gap:16px;border-bottom:1px solid var(--sand)}
+.prof-av{width:64px;height:64px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'DM Serif Display',serif;font-size:28px;color:#fff;flex-shrink:0}
+.prof-name{font-family:'DM Serif Display',serif;font-size:24px;color:var(--espresso)}
+.prof-email{font-size:12px;color:var(--text-soft);margin-top:2px}
+
+/* ── UTIL ── */
+.flex{display:flex}.aic{align-items:center}.jb{justify-content:space-between}.gap-2{gap:8px}.gap-3{gap:12px}
+.mt-2{margin-top:8px}.mt-3{margin-top:12px}.mt-4{margin-top:16px}
+.mb-2{margin-bottom:8px}.mb-3{margin-bottom:12px}
+.txt-soft{color:var(--text-soft);font-size:12px}
+.divider{height:1px;background:var(--sand);margin:8px 0}
+.locked-msg{text-align:center;color:var(--text-soft);font-size:13px;padding:14px 0}
+
+@media(prefers-reduced-motion:reduce){*{animation-duration:.001ms!important;transition-duration:.001ms!important}}
+</style>
+</head>
+<body>
+
+<!-- ══ LOGIN ══════════════════════════════════════════════ -->
+<div id="login-screen">
+  <div class="login-logo">Project SA</div>
+  <div class="login-tag">Your private fitness accountability space</div>
+
+  <div style="width:100%;max-width:300px;display:flex;flex-direction:column;gap:14px;margin-bottom:36px">
+    <button onclick="handleLogin('shireenzithara@gmail.com')" style="
+      width:100%;padding:20px;border:none;border-radius:16px;cursor:pointer;
+      background:linear-gradient(135deg,#F2D4D4,#E8B8B8);
+      font-family:'DM Serif Display',serif;font-size:22px;color:#3D2B1F;
+      box-shadow:0 4px 20px rgba(192,128,128,.25);
+      transition:transform .15s;display:flex;align-items:center;justify-content:center;gap:12px;
+    " ontouchstart="this.style.transform='scale(.97)'" ontouchend="this.style.transform='scale(1)'">
+      <span style="font-size:28px">👩</span> I'm Shireen
+    </button>
+
+    <button onclick="handleLogin('ashwindharmadurai@gmail.com')" style="
+      width:100%;padding:20px;border:none;border-radius:16px;cursor:pointer;
+      background:linear-gradient(135deg,#C5D5E4,#A8C0D4);
+      font-family:'DM Serif Display',serif;font-size:22px;color:#3D2B1F;
+      box-shadow:0 4px 20px rgba(122,155,181,.25);
+      transition:transform .15s;display:flex;align-items:center;justify-content:center;gap:12px;
+    " ontouchstart="this.style.transform='scale(.97)'" ontouchend="this.style.transform='scale(1)'">
+      <span style="font-size:28px">👨</span> I'm Ashwin
+    </button>
+  </div>
+
+  <div class="login-footer">Private to Shireen & Ashwin only.<br/>Tap your name to enter.</div>
+</div>
+
+<!-- ══ ONBOARDING ══════════════════════════════════════════ -->
+<div id="onboard-screen" style="display:none">
+  <div class="ob-eye">Welcome to Project SA</div>
+  <div class="ob-title" id="ob-title">Let's set your baseline.</div>
+  <div class="ob-sub">One-time setup. These numbers track your full transformation.</div>
+
+  <div class="card mb-3">
+    <div class="card-title">Current Weight (kg)</div>
+    <div class="flex aic gap-2">
+      <input type="number" class="meas-in" id="ob-weight" placeholder="e.g. 65" step="0.1" style="flex:1" oninput="updateProtein()"/>
+      <span class="unit">kg</span>
+    </div>
+    <div id="ob-protein-hint" style="font-size:12px;color:var(--text-soft);margin-top:8px"></div>
+  </div>
+
+  <div class="card mb-3">
+    <div class="card-title">Starting Measurements (inches)</div>
+    <div class="meas-grid">
+      <div><div class="meas-label">Chest</div><input type="number" class="meas-in" id="ob-chest" placeholder="—" step="0.1"/></div>
+      <div><div class="meas-label">Waist</div><input type="number" class="meas-in" id="ob-waist" placeholder="—" step="0.1"/></div>
+      <div><div class="meas-label">Hip</div><input type="number" class="meas-in" id="ob-hip" placeholder="—" step="0.1"/></div>
+      <div><div class="meas-label">Arms</div><input type="number" class="meas-in" id="ob-arms" placeholder="—" step="0.1"/></div>
+      <div><div class="meas-label">Thigh</div><input type="number" class="meas-in" id="ob-thigh" placeholder="—" step="0.1"/></div>
+      <div><div class="meas-label">Calf</div><input type="number" class="meas-in" id="ob-calf" placeholder="—" step="0.1"/></div>
+    </div>
+  </div>
+
+  <button class="btn" onclick="saveOnboarding()">Start My Journey →</button>
+</div>
+
+<!-- ══ MAIN APP ════════════════════════════════════════════ -->
+<div id="app" style="display:none">
+
+  <!-- Header -->
+  <div class="hdr" id="main-hdr">
+    <div class="hdr-row">
+      <div>
+        <div class="hdr-title" id="hdr-title">Good morning</div>
+        <div class="hdr-sub" id="hdr-sub"></div>
+      </div>
+      <button class="avatar" id="hdr-avatar" onclick="goTab('more')" style="background:#C08080">S</button>
+    </div>
+  </div>
+
+  <!-- HOME -->
+  <div id="tab-home" class="screen active">
+    <div class="challenge" id="challenge-banner">
+      <div class="ch-label">August Challenge</div>
+      <div class="ch-days" id="ch-days">—</div>
+      <div class="ch-sub" id="ch-sub">days remaining</div>
+      <div class="prog-track"><div class="prog-fill" id="ch-prog" style="width:0%"></div></div>
+      <div class="ch-meta"><span>Jun 22</span><span id="ch-pct">0%</span><span>Aug 10</span></div>
+    </div>
+
+    <div class="duo">
+      <!-- My card -->
+      <div class="pcard" id="my-pcard">
+        <div class="pcard-bar" id="my-pbar"></div>
+        <div class="flex jb aic"><div class="pcard-name" id="my-pname">Me</div></div>
+        <div class="flex aic gap-2" style="margin:10px 0">
+          <div class="ring-wrap">
+            <svg id="my-ring-svg" width="52" height="52" viewBox="0 0 52 52" style="transform:rotate(-90deg)">
+              <circle cx="26" cy="26" r="22" fill="none" stroke="#EDE5D8" stroke-width="4"/>
+              <circle id="my-ring" cx="26" cy="26" r="22" fill="none" stroke="#C08080" stroke-width="4" stroke-dasharray="0 138.2" stroke-linecap="round" style="transition:stroke-dasharray .8s ease"/>
+            </svg>
+            <div class="ring-label"><span id="my-score-ring">0</span><small>%</small></div>
+          </div>
+          <div>
+            <div style="font-size:10px;color:var(--text-soft)">today</div>
+            <div id="my-score-label" style="font-size:12px;font-weight:600;color:var(--green)">—</div>
+          </div>
+        </div>
+        <div class="stat-row"><span class="stat-l">🔥 Streak</span><span class="stat-v" id="my-streak-home">0d</span></div>
+        <div class="stat-row"><span class="stat-l">🏋️ Gym</span><span class="stat-v" id="my-gym-home">—</span></div>
+        <div class="stat-row"><span class="stat-l">🏃 Runs</span><span class="stat-v" id="my-runs-home">0/2</span></div>
+        <div class="stat-row"><span class="stat-l">🥩 Protein</span><span class="stat-v" id="my-protein-home">0g</span></div>
+        <div class="stat-row"><span class="stat-l">😴 Sleep</span><span class="stat-v" id="my-sleep-home">0h</span></div>
+      </div>
+      <!-- Partner card -->
+      <div class="pcard" id="partner-pcard">
+        <div class="pcard-bar" id="partner-pbar"></div>
+        <div class="flex jb aic">
+          <div class="pcard-name" id="partner-pname">Partner</div>
+          <span style="font-size:10px;font-weight:600;padding:2px 7px;border-radius:10px;color:#fff" id="partner-badge">Partner</span>
+        </div>
+        <div class="flex aic gap-2" style="margin:10px 0">
+          <div class="ring-wrap">
+            <svg width="52" height="52" viewBox="0 0 52 52" style="transform:rotate(-90deg)">
+              <circle cx="26" cy="26" r="22" fill="none" stroke="#EDE5D8" stroke-width="4"/>
+              <circle id="partner-ring" cx="26" cy="26" r="22" fill="none" stroke="#7A9BB5" stroke-width="4" stroke-dasharray="0 138.2" stroke-linecap="round" style="transition:stroke-dasharray .8s ease"/>
+            </svg>
+            <div class="ring-label"><span id="partner-score-ring">0</span><small>%</small></div>
+          </div>
+          <div>
+            <div style="font-size:10px;color:var(--text-soft)">today</div>
+            <div id="partner-score-label" style="font-size:12px;font-weight:600;color:var(--green)">—</div>
+          </div>
+        </div>
+        <div class="stat-row"><span class="stat-l">🔥 Streak</span><span class="stat-v" id="partner-streak-home">0d</span></div>
+        <div class="stat-row"><span class="stat-l">🏋️ Gym</span><span class="stat-v" id="partner-gym-home">—</span></div>
+        <div class="stat-row"><span class="stat-l">🏃 Runs</span><span class="stat-v" id="partner-runs-home">0/2</span></div>
+        <div class="stat-row"><span class="stat-l">🥩 Protein</span><span class="stat-v" id="partner-protein-home">0g</span></div>
+        <div class="stat-row"><span class="stat-l">😴 Sleep</span><span class="stat-v" id="partner-sleep-home">0h</span></div>
+        <button class="react-btn" onclick="sendReaction()" id="react-btn">🔥</button>
+      </div>
+    </div>
+
+    <!-- Recomp Card -->
+    <div class="sec">
+      <div class="recomp">
+        <div class="card-title" style="color:var(--blue-deep)">Body Stats</div>
+        <div class="flex gap-3">
+          <div><div style="font-size:11px;color:var(--text-soft)" id="recomp-my-name">Me</div><div style="font-family:'DM Serif Display',serif;font-size:22px;color:var(--blue-deep)" id="recomp-my-w">— kg</div></div>
+          <div><div style="font-size:11px;color:var(--text-soft)" id="recomp-partner-name">Partner</div><div style="font-family:'DM Serif Display',serif;font-size:22px;color:var(--blue-deep)" id="recomp-partner-w">— kg</div></div>
+        </div>
+        <div style="font-size:11px;color:var(--text-mid);margin-top:8px">Log weekly check-ins to see transformation trends</div>
+      </div>
+    </div>
+
+    <!-- Weekly summary -->
+    <div class="sec">
+      <div class="wk-card">
+        <div class="wk-week" id="wk-label">This week</div>
+        <div class="wk-title">Weekly Progress</div>
+        <div class="wk-scores">
+          <div class="wk-person"><small id="wk-my-name">Me</small><div id="wk-my-pct">—%</div></div>
+          <div class="wk-person"><small id="wk-partner-name">Partner</small><div id="wk-partner-pct">—%</div></div>
+        </div>
+      </div>
+    </div>
+  </div><!-- /home -->
+
+  <!-- LOG -->
+  <div id="tab-log" class="screen">
+    <div class="sec mt-3">
+      <!-- Date nav -->
+      <div class="date-nav">
+        <button class="date-arrow" onclick="changeDate(-1)">‹</button>
+        <div class="date-mid">
+          <div class="date-title" id="log-date-label">Today</div>
+          <div class="date-lock" id="log-lock-msg" style="display:none">Locked — past 12 noon deadline</div>
+        </div>
+        <button class="date-arrow" onclick="changeDate(1)" id="date-fwd">›</button>
+      </div>
+
+      <!-- Score -->
+      <div class="score-wrap mt-3">
+        <div class="score-hdr">
+          <div>
+            <div style="font-size:11px;color:var(--text-soft);margin-bottom:2px">Daily Score</div>
+            <div class="score-num"><span id="log-score-num">0</span><span style="font-size:18px">%</span></div>
+          </div>
+          <div class="score-badge" id="log-score-badge" style="background:var(--green)">—</div>
+        </div>
+        <div class="score-track"><div class="score-fill" id="log-score-fill" style="width:0%;background:var(--green)"></div></div>
+        <div class="score-meta" id="log-score-meta">Target: 85%</div>
+      </div>
+
+      <!-- Habits card -->
+      <div class="card">
+        <div class="card-title">Habits</div>
+
+        <!-- Gym -->
+        <div class="habit">
+          <span class="h-icon">🏋️</span>
+          <div class="h-body">
+            <div class="h-label">Gym</div>
+            <div id="gym-types" style="display:none;margin-top:5px;display:flex;gap:6px;flex-wrap:wrap">
+              <button onclick="setGymType('Strength')" id="gym-strength" class="s-btn">Strength</button>
+              <button onclick="setGymType('Conditioning')" id="gym-cond" class="s-btn">Conditioning</button>
+            </div>
+          </div>
+          <div class="h-ctrl"><button class="chkbox" id="gym-chk" onclick="toggleHabit('gym')"></button></div>
+        </div>
+
+        <!-- Steps -->
+        <div class="habit">
+          <span class="h-icon">👟</span>
+          <div class="h-body">
+            <div class="h-label">Steps</div>
+            <div class="h-sub" id="steps-sub">Goal: 10,000</div>
+          </div>
+          <div class="h-ctrl">
+            <input type="number" class="num-in" id="steps-in" placeholder="0" oninput="numChanged('steps')"/>
+          </div>
+        </div>
+
+        <!-- Protein -->
+        <div class="habit">
+          <span class="h-icon">🥩</span>
+          <div class="h-body">
+            <div class="h-label">Protein</div>
+            <div class="h-sub" id="protein-sub">Goal: —g</div>
+          </div>
+          <div class="h-ctrl">
+            <input type="number" class="num-in" id="protein-in" placeholder="0" oninput="numChanged('protein')"/>
+            <span class="unit">g</span>
+          </div>
+        </div>
+
+        <!-- Water -->
+        <div class="habit">
+          <span class="h-icon">💧</span>
+          <div class="h-body">
+            <div class="h-label">Water</div>
+            <div class="h-sub" id="water-sub">Goal: 2L</div>
+          </div>
+          <div class="h-ctrl">
+            <input type="number" class="num-in" id="water-in" placeholder="0.0" step="0.1" oninput="numChanged('water')"/>
+            <span class="unit">L</span>
+          </div>
+        </div>
+
+        <!-- Sleep -->
+        <div class="habit">
+          <span class="h-icon">😴</span>
+          <div class="h-body">
+            <div class="h-label">Sleep</div>
+            <div class="h-sub" id="sleep-sub">Goal: 7hrs</div>
+          </div>
+          <div class="h-ctrl">
+            <input type="number" class="num-in" id="sleep-in" placeholder="0" step="0.5" oninput="numChanged('sleep')"/>
+            <span class="unit">h</span>
+          </div>
+        </div>
+
+        <!-- Before 11 -->
+        <div class="habit">
+          <span class="h-icon">🌙</span>
+          <div class="h-body">
+            <div class="h-label">Before 11PM</div>
+            <div class="h-sub">No phone · Sleep routine</div>
+          </div>
+          <div class="h-ctrl"><button class="chkbox" id="before11-chk" onclick="toggleHabit('before11')"></button></div>
+        </div>
+
+        <!-- Sugar -->
+        <div class="habit">
+          <span class="h-icon">🍭</span>
+          <div class="h-body">
+            <div class="h-label">No Sugar</div>
+            <div class="h-sub">Chocolates, desserts, drinks</div>
+          </div>
+          <div class="h-ctrl">
+            <div class="sugar-btns">
+              <button class="s-btn" id="s-clean" onclick="setSugar('clean')" title="Clean">✓</button>
+              <button class="s-btn" id="s-slip" onclick="setSugar('slip')" title="Small slip">~</button>
+              <button class="s-btn" id="s-bad" onclick="setSugar('bad')" title="Had sugar">✗</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Fibre -->
+        <div class="habit">
+          <span class="h-icon">🥦</span>
+          <div class="h-body">
+            <div class="h-label">Fibre × 3 Meals</div>
+            <div class="h-sub">Fibre in all three meals</div>
+          </div>
+          <div class="h-ctrl"><button class="chkbox" id="fibre-chk" onclick="toggleHabit('fibre')"></button></div>
+        </div>
+      </div>
+
+      <!-- Runs -->
+      <div class="card">
+        <div class="card-title">Weekly Runs</div>
+        <div class="flex jb aic">
+          <div><span style="font-family:'DM Serif Display',serif;font-size:24px;color:var(--espresso)" id="runs-count">0</span><span style="font-size:13px;color:var(--text-soft)"> / 2 this week</span></div>
+          <div class="flex aic gap-2">
+            <div class="run-dot" id="run-dot-0">1</div>
+            <div class="run-dot" id="run-dot-1">2</div>
+            <button class="run-add" onclick="addRun()">+ Run</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Notes -->
+      <div class="card">
+        <div class="card-title">Daily Note</div>
+        <textarea class="txt-area" id="log-notes" placeholder="Wins, cravings, how you feel today…" rows="3"></textarea>
+      </div>
+
+      <button class="btn" id="save-log-btn" onclick="saveLog()">Save Today's Log</button>
+      <div class="locked-msg" id="locked-msg" style="display:none">This day is locked. Logs must be saved by 12 noon the following day.</div>
+    </div>
+  </div><!-- /log -->
+
+  <!-- WEEKLY CHECK-IN -->
+  <div id="tab-weekly" class="screen">
+    <div class="sec mt-3">
+      <div class="card mb-3">
+        <div class="card-title">Weekly Measurements</div>
+        <div class="meas-grid">
+          <div><div class="meas-label">Weight (kg)</div><input type="number" class="meas-in" id="wk-weight" placeholder="—" step="0.1" oninput="wkProteinHint()"/></div>
+          <div><div class="meas-label">Chest (in)</div><input type="number" class="meas-in" id="wk-chest" placeholder="—" step="0.1"/></div>
+          <div><div class="meas-label">Waist (in)</div><input type="number" class="meas-in" id="wk-waist" placeholder="—" step="0.1"/></div>
+          <div><div class="meas-label">Hip (in)</div><input type="number" class="meas-in" id="wk-hip" placeholder="—" step="0.1"/></div>
+          <div><div class="meas-label">Arms (in)</div><input type="number" class="meas-in" id="wk-arms" placeholder="—" step="0.1"/></div>
+          <div><div class="meas-label">Thigh (in)</div><input type="number" class="meas-in" id="wk-thigh" placeholder="—" step="0.1"/></div>
+          <div><div class="meas-label">Calf (in)</div><input type="number" class="meas-in" id="wk-calf" placeholder="—" step="0.1"/></div>
+        </div>
+        <div id="wk-protein-hint" style="font-size:12px;color:var(--text-soft);margin-top:10px;padding:10px;background:var(--cream);border-radius:8px;display:none"></div>
+      </div>
+      <div class="card mb-3">
+        <div class="card-title">Weekly Reflection</div>
+        <textarea class="txt-area" id="wk-notes" placeholder="How was this week? Biggest win? What to improve?" rows="4"></textarea>
+      </div>
+      <button class="btn" onclick="saveWeekly()">Save Check-in</button>
+    </div>
+  </div><!-- /weekly -->
+
+  <!-- INSIGHTS -->
+  <div id="tab-analytics" class="screen">
+    <div class="sec mt-3">
+      <div class="tabs" id="analytics-tabs">
+        <button class="tab on" onclick="setAnalyticsView('me',this)" id="analytics-me-tab">Me</button>
+        <button class="tab" onclick="setAnalyticsView('partner',this)" id="analytics-partner-tab">Partner</button>
+        <button class="tab" onclick="setAnalyticsView('together',this)">Together</button>
+      </div>
+
+      <!-- Weight trend -->
+      <div class="card mb-3">
+        <div class="card-title">Weight Trend</div>
+        <div class="flex jb aic mb-2">
+          <div><div style="font-size:11px;color:var(--text-soft)">Current</div><div style="font-family:'DM Serif Display',serif;font-size:22px;color:var(--espresso)" id="an-weight">— kg</div></div>
+          <div style="text-align:right"><div style="font-size:11px;color:var(--text-soft)">Change</div><div style="font-family:'DM Serif Display',serif;font-size:22px;color:var(--green)" id="an-weight-change">—</div></div>
+        </div>
+        <svg id="weight-spark" class="spark" height="56" viewBox="0 0 200 56" preserveAspectRatio="none">
+          <text x="100" y="34" text-anchor="middle" font-size="12" fill="#9E8878">Log check-ins to see trend</text>
+        </svg>
+      </div>
+
+      <!-- Waist trend -->
+      <div class="card mb-3">
+        <div class="card-title">Waist Trend</div>
+        <svg id="waist-spark" class="spark" height="56" viewBox="0 0 200 56" preserveAspectRatio="none">
+          <text x="100" y="34" text-anchor="middle" font-size="12" fill="#9E8878">Log check-ins to see trend</text>
+        </svg>
+      </div>
+
+      <!-- Insights -->
+      <div class="card mb-3">
+        <div class="card-title">Smart Insights</div>
+        <div id="insights-list">
+          <div class="insight">
+            <div class="ins-icon">📈</div>
+            <div class="ins-txt">Log at least 2 weekly check-ins to unlock personalised body analysis and insights.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Together view -->
+      <div id="together-section" style="display:none">
+        <div class="card mb-3">
+          <div class="card-title">Combined Progress</div>
+          <div class="flex gap-3">
+            <div style="flex:1;text-align:center">
+              <svg width="64" height="64" viewBox="0 0 64 64" style="transform:rotate(-90deg)">
+                <circle cx="32" cy="32" r="27" fill="none" stroke="#EDE5D8" stroke-width="5"/>
+                <circle id="together-my-ring" cx="32" cy="32" r="27" fill="none" stroke="#C08080" stroke-width="5" stroke-dasharray="0 169.6" stroke-linecap="round" style="transition:stroke-dasharray .8s"/>
+              </svg>
+              <div style="font-size:12px;color:var(--text-soft);margin-top:6px" id="together-my-name">Me</div>
+            </div>
+            <div style="flex:1;text-align:center">
+              <svg width="64" height="64" viewBox="0 0 64 64" style="transform:rotate(-90deg)">
+                <circle cx="32" cy="32" r="27" fill="none" stroke="#EDE5D8" stroke-width="5"/>
+                <circle id="together-partner-ring" cx="32" cy="32" r="27" fill="none" stroke="#7A9BB5" stroke-width="5" stroke-dasharray="0 169.6" stroke-linecap="round" style="transition:stroke-dasharray .8s"/>
+              </svg>
+              <div style="font-size:12px;color:var(--text-soft);margin-top:6px" id="together-partner-name">Partner</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div><!-- /analytics -->
+
+  <!-- MORE -->
+  <div id="tab-more" class="screen">
+
+    <!-- Streaks -->
+    <div class="sec mt-3">
+      <div class="card mb-3">
+        <div class="card-title" id="my-streaks-title">My Streaks</div>
+        <div class="st-grid">
+          <div class="st-pill"><span style="font-size:22px">🔥</span><div><div class="st-num" id="st-daily">0</div><div class="st-name">Daily</div></div></div>
+          <div class="st-pill"><span style="font-size:22px">🏋️</span><div><div class="st-num" id="st-gym">0</div><div class="st-name">Gym</div></div></div>
+          <div class="st-pill"><span style="font-size:22px">🍭</span><div><div class="st-num" id="st-sugar">0</div><div class="st-name">No Sugar</div></div></div>
+          <div class="st-pill"><span style="font-size:22px">🏃</span><div><div class="st-num" id="st-running">0</div><div class="st-name">Running</div></div></div>
+        </div>
+      </div>
+      <div class="card mb-3">
+        <div class="card-title" id="partner-streaks-title">Partner Streaks</div>
+        <div class="st-grid">
+          <div class="st-pill"><span style="font-size:22px">🔥</span><div><div class="st-num" id="pst-daily">0</div><div class="st-name">Daily</div></div></div>
+          <div class="st-pill"><span style="font-size:22px">🏋️</span><div><div class="st-num" id="pst-gym">0</div><div class="st-name">Gym</div></div></div>
+          <div class="st-pill"><span style="font-size:22px">🍭</span><div><div class="st-num" id="pst-sugar">0</div><div class="st-name">No Sugar</div></div></div>
+          <div class="st-pill"><span style="font-size:22px">🏃</span><div><div class="st-num" id="pst-running">0</div><div class="st-name">Running</div></div></div>
+        </div>
+      </div>
+
+      <!-- Achievements -->
+      <div class="card mb-3">
+        <div class="card-title">Achievements</div>
+        <div id="achievements-list">
+          <div class="ach" style="opacity:.4"><div class="ach-icon">🔥</div><div><div class="ach-label">7-Day Streak</div><div class="ach-status">Locked</div></div></div>
+          <div class="ach" style="opacity:.4"><div class="ach-icon">⚡</div><div><div class="ach-label">30-Day Streak</div><div class="ach-status">Locked</div></div></div>
+          <div class="ach" style="opacity:.4"><div class="ach-icon">💪</div><div><div class="ach-label">10 Gym Sessions</div><div class="ach-status">Locked</div></div></div>
+          <div class="ach" style="opacity:.4"><div class="ach-icon">🏃</div><div><div class="ach-label">10 Runs Completed</div><div class="ach-status">Locked</div></div></div>
+          <div class="ach" style="opacity:.4"><div class="ach-icon">🏆</div><div><div class="ach-label">August Challenge</div><div class="ach-status">Aug 10</div></div></div>
+        </div>
+      </div>
+
+      <!-- Accountability -->
+      <div style="font-family:'DM Serif Display',serif;font-size:20px;color:var(--espresso);margin-bottom:12px">Accountability</div>
+      <div id="penalties-section">
+        <div class="card" style="text-align:center;padding:24px">
+          <div style="font-size:32px;margin-bottom:8px">🎉</div>
+          <div style="font-family:'DM Serif Display',serif;font-size:18px;color:var(--espresso)">All settled up!</div>
+          <div style="font-size:13px;color:var(--text-soft);margin-top:4px">Keep hitting 85% to stay accountable.</div>
+        </div>
+      </div>
+
+      <!-- Photos -->
+      <div style="font-family:'DM Serif Display',serif;font-size:20px;color:var(--espresso);margin:16px 0 12px">Progress Photos</div>
+      <div class="card mb-3">
+        <div class="card-title" id="photos-week-label">This Week</div>
+        <div class="photo-grid">
+          <div class="photo-slot" onclick="pickPhoto('front')" id="photo-front"><span>+</span><span class="photo-slot-lbl">Front</span></div>
+          <div class="photo-slot" onclick="pickPhoto('side')"  id="photo-side"><span>+</span><span class="photo-slot-lbl">Side</span></div>
+          <div class="photo-slot" onclick="pickPhoto('back')"  id="photo-back"><span>+</span><span class="photo-slot-lbl">Back</span></div>
+        </div>
+        <input type="file" id="photo-input" accept="image/*" style="display:none" onchange="photoChosen(event)"/>
+        <div style="font-size:11px;color:var(--text-soft);margin-top:10px">Tap a slot to upload. Stored privately on your device.</div>
+      </div>
+
+      <!-- Profile -->
+      <div class="prof-hdr" style="border-radius:var(--r);margin-bottom:12px">
+        <div class="prof-av" id="prof-avatar" style="background:#C08080">S</div>
+        <div>
+          <div class="prof-name" id="prof-name">—</div>
+          <div class="prof-email" id="prof-email">—</div>
+          <div style="font-size:12px;color:var(--text-soft);margin-top:2px">Weight: <strong id="prof-weight" style="color:var(--espresso)">— kg</strong></div>
+        </div>
+      </div>
+
+      <div class="card mb-3">
+        <div class="card-title">Update Weight</div>
+        <div class="flex aic gap-2">
+          <input type="number" class="meas-in" id="prof-weight-in" placeholder="kg" step="0.1" style="flex:1"/>
+          <button class="btn sm" onclick="updateWeight()">Save</button>
+        </div>
+        <div id="prof-protein-hint" style="font-size:12px;color:var(--text-soft);margin-top:8px"></div>
+      </div>
+
+      <div class="card mb-3">
+        <div class="card-title">Notifications</div>
+        <div style="font-size:13px;color:var(--text-mid);line-height:1.6">Daily reminders at 8PM, 9PM (partner check), and 10PM. Add to home screen for push notifications on iOS 16.4+.</div>
+        <button class="btn sec" onclick="enableNotifs()">Enable Notifications</button>
+      </div>
+
+      <button class="btn sec" onclick="signOut()" style="margin-bottom:32px">Sign Out</button>
+    </div>
+  </div><!-- /more -->
+
+  <!-- NAV -->
+  <nav class="nav">
+    <button class="nav-btn active" onclick="goTab('home')" id="nav-home"><span class="nav-icon">🏠</span>Home</button>
+    <button class="nav-btn" onclick="goTab('log')" id="nav-log"><span class="nav-icon">📋</span>Log</button>
+    <button class="nav-btn" onclick="goTab('weekly')" id="nav-weekly"><span class="nav-icon">📅</span>Weekly</button>
+    <button class="nav-btn" onclick="goTab('analytics')" id="nav-analytics"><span class="nav-icon">📊</span>Insights</button>
+    <button class="nav-btn" onclick="goTab('more')" id="nav-more"><span class="nav-icon">⚡</span>More</button>
+  </nav>
+</div><!-- /app -->
+
+<!-- Toast -->
+<div id="toast"></div>
+
+<!-- Settle modal -->
+<div class="modal-bg" id="settle-modal">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Mark as Settled</div>
+    <textarea class="txt-area" id="settle-note" placeholder="What did you do? (e.g. Dinner at Murugan Idli)" rows="3"></textarea>
+    <button class="btn" onclick="confirmSettle()">Confirm Settlement</button>
+    <button class="btn sec" onclick="closeModal('settle-modal')">Cancel</button>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════════════════════
+// PROJECT SA — Complete Application Logic
+// ══════════════════════════════════════════════════════════
+
+// ── CONSTANTS ────────────────────────────────────────────
+const USERS = {
+  'shireenzithara@gmail.com':   { name:'Shireen', color:'#C08080', colorLight:'#F2D4D4', avatar:'S' },
+  'ashwindharmadurai@gmail.com':{ name:'Ashwin',  color:'#7A9BB5', colorLight:'#C5D5E4', avatar:'A' },
+};
+const CHALLENGE_START = new Date('2025-06-22');
+const CHALLENGE_END   = new Date('2025-08-10');
+const PROTEIN_FACTOR  = 3.5;
+const STEPS_GOAL      = 10000;
+const WATER_GOAL      = 2;
+const SLEEP_GOAL      = 7;
+const RUNS_GOAL       = 2;
+
+// ── STATE ─────────────────────────────────────────────────
+let currentUser  = null; // { email, uid, name, color, ... }
+let partnerInfo  = null;
+let logDate      = todayStr();
+let logLocked    = false;
+let analyticsView = 'me';
+let pendingSettleId = null;
+let currentPhotoSlot = null;
+
+// ── STORAGE HELPERS ───────────────────────────────────────
+const SK = 'psa_v2';
+function load() {
+  try { return JSON.parse(localStorage.getItem(SK) || '{}'); } catch { return {}; }
+}
+function save(data) {
+  localStorage.setItem(SK, JSON.stringify(data));
+}
+function getPath(path) {
+  const parts = path.split('/');
+  let node = load();
+  for (const p of parts) { if (node == null) return null; node = node[p]; }
+  return node ?? null;
+}
+function setPath(path, value, merge = true) {
+  const data = load();
+  const parts = path.split('/');
+  let node = data;
+  for (let i = 0; i < parts.length - 1; i++) {
+    if (!node[parts[i]]) node[parts[i]] = {};
+    node = node[parts[i]];
+  }
+  const last = parts[parts.length - 1];
+  node[last] = merge ? { ...(node[last] || {}), ...value } : value;
+  save(data);
+}
+function getAll(path) {
+  const node = getPath(path);
+  if (!node) return [];
+  return Object.entries(node).map(([k,v]) => ({ id: k, ...v }));
+}
+
+// ── DATE UTILS ────────────────────────────────────────────
+function todayStr() {
+  return new Date().toISOString().split('T')[0];
+}
+function isLocked(dateISO) {
+  const d = new Date(dateISO + 'T00:00:00');
+  const deadline = new Date(d);
+  deadline.setDate(d.getDate() + 1);
+  deadline.setHours(12, 0, 0, 0);
+  return new Date() > deadline;
+}
+function fmtDate(iso) {
+  const d = new Date(iso + 'T00:00:00');
+  return d.toLocaleDateString('en-IN', { day:'numeric', month:'short' });
+}
+function getWeekId() {
+  const d = new Date();
+  const s = new Date(d);
+  s.setDate(d.getDate() - d.getDay());
+  return s.toISOString().split('T')[0];
+}
+function daysLeft() {
+  return Math.max(0, Math.ceil((CHALLENGE_END - new Date()) / 86400000));
+}
+function challengePct() {
+  const total = CHALLENGE_END - CHALLENGE_START;
+  const elapsed = new Date() - CHALLENGE_START;
+  return Math.min(100, Math.max(0, Math.round((elapsed / total) * 100)));
+}
+function greeting() {
+  const h = new Date().getHours();
+  if (h < 12) return 'Good morning';
+  if (h < 17) return 'Good afternoon';
+  return 'Good evening';
+}
+
+// ── SCORING ───────────────────────────────────────────────
+function proteinGoal(weight) { return Math.round(PROTEIN_FACTOR * (weight || 60)); }
+function calcScore(log, weight) {
+  if (!log) return 0;
+  let pts = 0;
+  if (log.gym) pts++;
+  if ((log.steps || 0) >= STEPS_GOAL) pts++;
+  if ((log.protein || 0) >= proteinGoal(weight)) pts++;
+  if ((log.water || 0) >= WATER_GOAL) pts++;
+  if ((log.sleep || 0) >= SLEEP_GOAL) pts++;
+  if (log.before11) pts++;
+  if (log.sugar === 'clean') pts++;
+  else if (log.sugar === 'slip') pts += 0.5;
+  if (log.fibre) pts++;
+  return Math.round((pts / 8) * 100);
+}
+function scoreColor(pct) {
+  if (pct >= 85) return '#6FAF6F';
+  if (pct >= 70) return '#C9963A';
+  return '#C07070';
+}
+function scoreLabel(pct) {
+  if (pct >= 85) return 'On Track ✓';
+  if (pct >= 70) return 'Getting There';
+  return 'Needs Focus';
+}
+
+// ── TOAST ─────────────────────────────────────────────────
+let toastTimer;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// ── NAVIGATION ────────────────────────────────────────────
+function goTab(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + id).classList.add('active');
+  const nb = document.getElementById('nav-' + id);
+  if (nb) nb.classList.add('active');
+
+  // Update header
+  const titles = { home: greeting() + ',', log: 'Daily Log', weekly: 'Weekly Check-in', analytics: 'Insights', more: 'More' };
+  document.getElementById('hdr-title').textContent = titles[id] || id;
+
+  if (id === 'home')      { document.getElementById('hdr-title').innerHTML = greeting() + ',<br>' + (currentUser?.name || ''); }
+  if (id === 'log')       renderLogUI();
+  if (id === 'analytics') renderAnalytics();
+  if (id === 'more')      renderMore();
+
+  document.getElementById('hdr-sub').textContent =
+    id === 'home' ? (todayStr() + ' · Project SA') :
+    id === 'log'  ? ('Score: ' + calcScore(getPath('dailyLogs/' + currentUser?.uid + '/' + logDate), getPath('users/' + currentUser?.uid + '/currentWeight')) + '% today') : '';
+}
+
+// ── LOGIN ─────────────────────────────────────────────────
+function handleLogin(email) {
+  const clean = email.trim().toLowerCase();
+  if (!USERS[clean]) return;
+  const uid = clean.replace(/[^a-z]/g, '');
+  const user = { email: clean, uid, ...USERS[clean] };
+  currentUser = user;
+  setPath('session', { email: clean, uid }, false);
+  initApp();
+}
+
+function signOut() {
+  const data = load();
+  delete data.session;
+  save(data);
+  currentUser = null;
+  document.getElementById('app').style.display = 'none';
+  document.getElementById('onboard-screen').style.display = 'none';
+  document.getElementById('login-screen').style.display = 'flex';
+}
+
+// ── INIT ──────────────────────────────────────────────────
+window.onload = function() {
+  // Check saved session
+  const sess = getPath('session');
+  if (sess && USERS[sess.email]) {
+    currentUser = { email: sess.email, uid: sess.uid, ...USERS[sess.email] };
+    initApp();
+  }
+  // Schedule in-app reminders
+  scheduleReminders();
+};
+
+function initApp() {
+  // Set partner
+  const partnerEmail = Object.keys(USERS).find(e => e !== currentUser.email);
+  const partnerUid   = partnerEmail.replace(/[^a-z]/g, '');
+  partnerInfo = { email: partnerEmail, uid: partnerUid, ...USERS[partnerEmail] };
+
+  // Onboarding check
+  const userData = getPath('users/' + currentUser.uid);
+  if (!userData || !userData.onboarded) {
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('onboard-screen').style.display = 'flex';
+    document.getElementById('ob-title').textContent = 'Let\'s set your baseline, ' + currentUser.name + '.';
+    return;
+  }
+
+  launchApp();
+}
+
+function launchApp() {
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('onboard-screen').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+
+  // Set avatar
+  document.getElementById('hdr-avatar').textContent = currentUser.avatar;
+  document.getElementById('hdr-avatar').style.background = currentUser.color;
+
+  renderHome();
+  goTab('home');
+}
+
+// ── ONBOARDING ────────────────────────────────────────────
+function updateProtein() {
+  const w = parseFloat(document.getElementById('ob-weight').value);
+  const hint = document.getElementById('ob-protein-hint');
+  if (w) hint.textContent = 'Daily protein target: ' + proteinGoal(w) + 'g';
+  else hint.textContent = '';
+}
+
+function saveOnboarding() {
+  const w = parseFloat(document.getElementById('ob-weight').value);
+  if (!w) { alert('Please enter your weight.'); return; }
+  const uid = currentUser.uid;
+  setPath('users/' + uid, {
+    name: currentUser.name, email: currentUser.email,
+    currentWeight: w, onboarded: true, setupDate: todayStr(),
+  }, false);
+  setPath('weeklyCheckins/' + uid + '/baseline', {
+    weight: w,
+    chest:  parseFloat(document.getElementById('ob-chest').value)  || 0,
+    waist:  parseFloat(document.getElementById('ob-waist').value)  || 0,
+    hip:    parseFloat(document.getElementById('ob-hip').value)    || 0,
+    arms:   parseFloat(document.getElementById('ob-arms').value)   || 0,
+    thigh:  parseFloat(document.getElementById('ob-thigh').value)  || 0,
+    calf:   parseFloat(document.getElementById('ob-calf').value)   || 0,
+    date: todayStr(), isBaseline: true,
+  }, false);
+  launchApp();
+}
+
+// ── HOME ──────────────────────────────────────────────────
+function renderHome() {
+  // Challenge
+  const dl = daysLeft();
+  const cp = challengePct();
+  document.getElementById('ch-days').textContent = dl;
+  document.getElementById('ch-sub').textContent = 'days remaining · ' + cp + '% through';
+  document.getElementById('ch-prog').style.width = cp + '%';
+  document.getElementById('ch-pct').textContent = cp + '%';
+
+  // My data
+  const myWeight = getPath('users/' + currentUser.uid + '/currentWeight') || 60;
+  const myLog    = getPath('dailyLogs/' + currentUser.uid + '/' + todayStr()) || {};
+  const myStreak = getPath('streaks/' + currentUser.uid) || {};
+  const myScore  = calcScore(myLog, myWeight);
+  const myColor  = currentUser.color;
+  const circ     = 2 * Math.PI * 22;
+
+  document.getElementById('my-pbar').style.background = myColor;
+  document.getElementById('my-pname').textContent = currentUser.name;
+  document.getElementById('my-ring').setAttribute('stroke', myColor);
+  document.getElementById('my-ring').setAttribute('stroke-dasharray', (myScore/100*circ) + ' ' + (circ - myScore/100*circ));
+  document.getElementById('my-score-ring').textContent = myScore;
+  document.getElementById('my-score-label').textContent = scoreLabel(myScore);
+  document.getElementById('my-score-label').style.color = scoreColor(myScore);
+  document.getElementById('my-streak-home').textContent = (myStreak.daily || 0) + 'd';
+  document.getElementById('my-gym-home').textContent = myLog.gym ? '✓' : '—';
+  document.getElementById('my-runs-home').textContent = (myStreak.runsThisWeek || 0) + '/' + RUNS_GOAL;
+  document.getElementById('my-protein-home').textContent = (myLog.protein || 0) + 'g';
+  document.getElementById('my-protein-home').style.color = (myLog.protein||0) >= proteinGoal(myWeight) ? '#6FAF6F' : '#C07070';
+  document.getElementById('my-sleep-home').textContent = (myLog.sleep || 0) + 'h';
+
+  // Partner data
+  const partnerWeight = getPath('users/' + partnerInfo.uid + '/currentWeight') || 60;
+  const partnerLog    = getPath('dailyLogs/' + partnerInfo.uid + '/' + todayStr()) || {};
+  const partnerStreak = getPath('streaks/' + partnerInfo.uid) || {};
+  const partnerScore  = calcScore(partnerLog, partnerWeight);
+  const pColor        = partnerInfo.color;
+
+  document.getElementById('partner-pbar').style.background = pColor;
+  document.getElementById('partner-pname').textContent = partnerInfo.name;
+  document.getElementById('partner-badge').textContent = '♥';
+  document.getElementById('partner-badge').style.background = pColor;
+  document.getElementById('partner-ring').setAttribute('stroke', pColor);
+  document.getElementById('partner-ring').setAttribute('stroke-dasharray', (partnerScore/100*circ) + ' ' + (circ - partnerScore/100*circ));
+  document.getElementById('partner-score-ring').textContent = partnerScore;
+  document.getElementById('partner-score-label').textContent = scoreLabel(partnerScore);
+  document.getElementById('partner-score-label').style.color = scoreColor(partnerScore);
+  document.getElementById('partner-streak-home').textContent = (partnerStreak.daily || 0) + 'd';
+  document.getElementById('partner-gym-home').textContent = partnerLog.gym ? '✓' : '—';
+  document.getElementById('partner-runs-home').textContent = (partnerStreak.runsThisWeek || 0) + '/' + RUNS_GOAL;
+  document.getElementById('partner-protein-home').textContent = (partnerLog.protein || 0) + 'g';
+  document.getElementById('partner-sleep-home').textContent = (partnerLog.sleep || 0) + 'h';
+
+  // Recomp
+  document.getElementById('recomp-my-name').textContent = currentUser.name;
+  document.getElementById('recomp-my-w').textContent = myWeight + ' kg';
+  document.getElementById('recomp-partner-name').textContent = partnerInfo.name;
+  document.getElementById('recomp-partner-w').textContent = partnerWeight + ' kg';
+
+  // Weekly card
+  const weekLabel = 'Week of ' + fmtDate(getWeekId());
+  document.getElementById('wk-label').textContent = weekLabel;
+  document.getElementById('wk-my-name').textContent = currentUser.name;
+  document.getElementById('wk-my-pct').textContent = myScore + '%';
+  document.getElementById('wk-partner-name').textContent = partnerInfo.name;
+  document.getElementById('wk-partner-pct').textContent = partnerScore + '%';
+
+  // Header
+  document.getElementById('hdr-title').innerHTML = greeting() + ',<br>' + currentUser.name + '.';
+  document.getElementById('hdr-sub').textContent = todayStr() + ' · Project SA';
+}
+
+// Reaction
+function sendReaction() {
+  const emojis = ['🔥','💪','👏','❤️','⚡','🏆'];
+  const emoji = emojis[Math.floor(Math.random() * emojis.length)];
+  document.getElementById('react-btn').textContent = emoji;
+  showToast('Sent ' + emoji + ' to ' + partnerInfo.name + '!');
+}
+
+// ── LOG ───────────────────────────────────────────────────
+let logForm = {};
+
+function renderLogUI() {
+  const uid = currentUser.uid;
+  const weight = getPath('users/' + uid + '/currentWeight') || 60;
+  logLocked = isLocked(logDate);
+
+  // Date label
+  const isToday = logDate === todayStr();
+  const ydArr = new Date(); ydArr.setDate(ydArr.getDate() - 1);
+  const isYest = logDate === ydArr.toISOString().split('T')[0];
+  document.getElementById('log-date-label').textContent = isToday ? 'Today' : isYest ? 'Yesterday' : fmtDate(logDate);
+  document.getElementById('log-lock-msg').style.display = logLocked ? 'block' : 'none';
+  document.getElementById('save-log-btn').style.display = logLocked ? 'none' : 'block';
+  document.getElementById('locked-msg').style.display = logLocked ? 'block' : 'none';
+
+  // Fwd button
+  const tomorrow = new Date(); tomorrow.setDate(tomorrow.getDate() + 1);
+  const fwdOk = new Date(logDate) < new Date(todayStr());
+  document.getElementById('date-fwd').style.color = fwdOk ? 'var(--text-soft)' : 'transparent';
+
+  // Load log
+  const log = getPath('dailyLogs/' + uid + '/' + logDate) || {};
+  logForm = { ...log };
+
+  // Protein sub
+  document.getElementById('protein-sub').textContent = 'Goal: ' + proteinGoal(weight) + 'g';
+
+  // Set fields
+  setChk('gym-chk', log.gym);
+  setChk('before11-chk', log.before11);
+  setChk('fibre-chk', log.fibre);
+  document.getElementById('steps-in').value = log.steps || '';
+  document.getElementById('protein-in').value = log.protein || '';
+  document.getElementById('water-in').value = log.water || '';
+  document.getElementById('sleep-in').value = log.sleep || '';
+  document.getElementById('log-notes').value = log.notes || '';
+
+  // Gym types
+  document.getElementById('gym-types').style.display = log.gym ? 'flex' : 'none';
+  setGymTypeBtns(log.gymType);
+
+  // Sugar
+  ['clean','slip','bad'].forEach(s => {
+    document.getElementById('s-' + s).className = 's-btn' + (log.sugar === s ? (' ' + s[0]) : '');
+  });
+
+  // Runs
+  const runs = log.runs || 0;
+  document.getElementById('runs-count').textContent = runs;
+  for (let i = 0; i < RUNS_GOAL; i++) {
+    const dot = document.getElementById('run-dot-' + i);
+    if (i < runs) { dot.classList.add('on'); dot.textContent = '✓'; }
+    else { dot.classList.remove('on'); dot.textContent = i + 1; }
+  }
+
+  // Subs
+  updateSubs(log, weight);
+  updateScoreUI(calcScore(log, weight));
+
+  // Disable inputs if locked
+  document.querySelectorAll('#tab-log input, #tab-log textarea, #tab-log button').forEach(el => {
+    if (!['date-fwd','date-arrow'].includes(el.className)) {
+      if (logLocked) el.setAttribute('disabled',''); else el.removeAttribute('disabled');
+    }
+  });
+  // Re-enable date arrows always
+  document.querySelectorAll('.date-arrow').forEach(el => el.removeAttribute('disabled'));
+}
+
+function setChk(id, val) {
+  const el = document.getElementById(id);
+  if (val) { el.classList.add('on'); el.textContent = '✓'; }
+  else { el.classList.remove('on'); el.textContent = ''; }
+}
+
+function toggleHabit(key) {
+  if (logLocked) return;
+  logForm[key] = !logForm[key];
+  setChk(key + '-chk', logForm[key]);
+  if (key === 'gym') {
+    document.getElementById('gym-types').style.display = logForm[key] ? 'flex' : 'none';
+  }
+  const weight = getPath('users/' + currentUser.uid + '/currentWeight') || 60;
+  updateScoreUI(calcScore(logForm, weight));
+}
+
+function setGymType(t) {
+  if (logLocked) return;
+  logForm.gymType = t;
+  setGymTypeBtns(t);
+}
+
+function setGymTypeBtns(t) {
+  ['Strength','Conditioning'].forEach(s => {
+    const id = s === 'Strength' ? 'gym-strength' : 'gym-cond';
+    const btn = document.getElementById(id);
+    if (t === s) { btn.style.background = 'var(--espresso)'; btn.style.color = '#fff'; btn.style.borderColor = 'var(--espresso)'; }
+    else { btn.style.background = ''; btn.style.color = ''; btn.style.borderColor = ''; }
+  });
+}
+
+function setSugar(v) {
+  if (logLocked) return;
+  logForm.sugar = logForm.sugar === v ? '' : v;
+  ['clean','slip','bad'].forEach(s => {
+    const el = document.getElementById('s-' + s);
+    el.className = 's-btn' + (logForm.sugar === s ? (' ' + s[0]) : '');
+  });
+  const weight = getPath('users/' + currentUser.uid + '/currentWeight') || 60;
+  updateScoreUI(calcScore(logForm, weight));
+}
+
+function numChanged(key) {
+  if (logLocked) return;
+  const el = document.getElementById(key + '-in');
+  logForm[key] = parseFloat(el.value) || 0;
+  const weight = getPath('users/' + currentUser.uid + '/currentWeight') || 60;
+  updateSubs(logForm, weight);
+  updateScoreUI(calcScore(logForm, weight));
+}
+
+function updateSubs(log, weight) {
+  const steps = log.steps || 0;
+  document.getElementById('steps-sub').textContent = steps >= STEPS_GOAL ? 'Goal: 10,000 · ✓ Done!' : 'Goal: 10,000 · ' + Math.max(0, STEPS_GOAL - steps).toLocaleString() + ' to go';
+  const pg = proteinGoal(weight);
+  const pr = log.protein || 0;
+  document.getElementById('protein-sub').textContent = pr >= pg ? 'Goal: ' + pg + 'g · ✓ Hit!' : 'Goal: ' + pg + 'g · ' + (pg - pr) + 'g short';
+  const w = log.water || 0;
+  document.getElementById('water-sub').textContent = w >= WATER_GOAL ? 'Goal: 2L · ✓ Done!' : 'Goal: 2L · ' + (WATER_GOAL - w).toFixed(1) + 'L to go';
+  const sl = log.sleep || 0;
+  document.getElementById('sleep-sub').textContent = sl >= SLEEP_GOAL ? 'Goal: 7hrs · ✓ Good rest!' : 'Goal: 7hrs · ' + (SLEEP_GOAL - sl).toFixed(1) + 'h short';
+}
+
+function updateScoreUI(score) {
+  document.getElementById('log-score-num').textContent = score;
+  document.getElementById('log-score-fill').style.width = score + '%';
+  document.getElementById('log-score-fill').style.background = scoreColor(score);
+  document.getElementById('log-score-badge').textContent = scoreLabel(score);
+  document.getElementById('log-score-badge').style.background = scoreColor(score);
+  document.getElementById('log-score-meta').textContent = 'Target: 85% · ' + (score >= 85 ? '✓ Target reached!' : (85 - score) + '% to go');
+}
+
+function addRun() {
+  if (logLocked) return;
+  const runs = Math.min(RUNS_GOAL, (logForm.runs || 0) + 1);
+  logForm.runs = runs;
+  document.getElementById('runs-count').textContent = runs;
+  for (let i = 0; i < RUNS_GOAL; i++) {
+    const dot = document.getElementById('run-dot-' + i);
+    if (i < runs) { dot.classList.add('on'); dot.textContent = '✓'; }
+    else { dot.classList.remove('on'); dot.textContent = i + 1; }
+  }
+}
+
+function changeDate(delta) {
+  const d = new Date(logDate + 'T00:00:00');
+  d.setDate(d.getDate() + delta);
+  const newDate = d.toISOString().split('T')[0];
+  if (d < CHALLENGE_START) return;
+  if (d > new Date()) return;
+  logDate = newDate;
+  renderLogUI();
+}
+
+function saveLog() {
+  if (logLocked) return;
+  const uid = currentUser.uid;
+  const weight = getPath('users/' + uid + '/currentWeight') || 60;
+  logForm.notes = document.getElementById('log-notes').value;
+  logForm.score = calcScore(logForm, weight);
+  logForm.savedAt = new Date().toISOString();
+
+  setPath('dailyLogs/' + uid + '/' + logDate, logForm, false);
+
+  // Update streaks
+  const st = getPath('streaks/' + uid) || {};
+  if (logForm.score >= 85) st.daily = (st.daily || 0) + 1;
+  else st.daily = 0;
+  if (logForm.gym) st.gym = (st.gym || 0) + 1; else st.gym = 0;
+  if (logForm.sugar === 'clean') st.noSugar = (st.noSugar || 0) + 1; else st.noSugar = 0;
+  st.runsThisWeek = logForm.runs || 0;
+  setPath('streaks/' + uid, st, false);
+
+  updateScoreUI(logForm.score);
+  showToast('Saved ✓');
+
+  // Check if partner needs a nudge (simulated)
+  const partnerLog = getPath('dailyLogs/' + partnerInfo.uid + '/' + todayStr());
+  if (!partnerLog && new Date().getHours() >= 21) {
+    showToast('Reminder sent to ' + partnerInfo.name + ' 👀');
+  }
+}
+
+// ── WEEKLY ────────────────────────────────────────────────
+function wkProteinHint() {
+  const w = parseFloat(document.getElementById('wk-weight').value);
+  const hint = document.getElementById('wk-protein-hint');
+  if (w) { hint.style.display = 'block'; hint.textContent = 'New protein target: ' + proteinGoal(w) + 'g/day'; }
+  else hint.style.display = 'none';
+}
+
+function saveWeekly() {
+  const uid = currentUser.uid;
+  const weekId = getWeekId();
+  const w = parseFloat(document.getElementById('wk-weight').value);
+  const data = {
+    weight: w || 0,
+    chest:  parseFloat(document.getElementById('wk-chest').value)  || 0,
+    waist:  parseFloat(document.getElementById('wk-waist').value)  || 0,
+    hip:    parseFloat(document.getElementById('wk-hip').value)    || 0,
+    arms:   parseFloat(document.getElementById('wk-arms').value)   || 0,
+    thigh:  parseFloat(document.getElementById('wk-thigh').value)  || 0,
+    calf:   parseFloat(document.getElementById('wk-calf').value)   || 0,
+    notes:  document.getElementById('wk-notes').value,
+    date:   todayStr(), weekId,
+  };
+  setPath('weeklyCheckins/' + uid + '/' + weekId, data, false);
+  if (w) setPath('users/' + uid, { currentWeight: w });
+  showToast('Check-in saved ✓');
+  renderHome();
+}
+
+// ── ANALYTICS ─────────────────────────────────────────────
+function setAnalyticsView(view, btn) {
+  analyticsView = view;
+  document.querySelectorAll('#analytics-tabs .tab').forEach(b => b.classList.remove('on'));
+  if (btn) btn.classList.add('on');
+  document.getElementById('together-section').style.display = view === 'together' ? 'block' : 'none';
+  renderAnalytics();
+}
+
+function renderAnalytics() {
+  const uid = analyticsView === 'partner' ? partnerInfo.uid : currentUser.uid;
+  const weight = getPath('users/' + uid + '/currentWeight') || 0;
+  const checkins = getAll('weeklyCheckins/' + uid).filter(c => !c.isBaseline).sort((a,b) => (a.date||'').localeCompare(b.date||''));
+
+  document.getElementById('an-weight').textContent = weight ? weight + ' kg' : '— kg';
+
+  if (checkins.length >= 2) {
+    const first = checkins[0], last = checkins[checkins.length - 1];
+    const diff = ((last.weight || 0) - (first.weight || 0)).toFixed(1);
+    document.getElementById('an-weight-change').textContent = (diff > 0 ? '+' : '') + diff + ' kg';
+    drawSparkline('weight-spark', checkins.map(c => c.weight || 0), analyticsView === 'partner' ? '#7A9BB5' : '#C08080');
+    drawSparkline('waist-spark', checkins.map(c => c.waist || 0), '#B89A7A');
+
+    // Insights
+    const insights = [];
+    if (Math.abs(last.weight - first.weight) < 0.5 && last.waist < first.waist) {
+      insights.push({ icon:'📊', text:'Body recomposition likely occurring — waist is decreasing while weight stays stable. Fat is being replaced by muscle.' });
+    }
+    if (last.weight < first.weight) {
+      insights.push({ icon:'📉', text: 'Weight trending down ' + diff + 'kg since first check-in. Keep the consistency going.' });
+    }
+    if (insights.length === 0) {
+      insights.push({ icon:'💪', text:'Keep logging weekly check-ins. More data = more precise insights about your body transformation.' });
+    }
+    document.getElementById('insights-list').innerHTML = insights.map(i =>
+      '<div class="insight"><div class="ins-icon">' + i.icon + '</div><div class="ins-txt">' + i.text + '</div></div>'
+    ).join('');
+  } else {
+    document.getElementById('an-weight-change').textContent = '—';
+    document.getElementById('insights-list').innerHTML = '<div class="insight"><div class="ins-icon">📈</div><div class="ins-txt">Log at least 2 weekly check-ins to unlock personalised body analysis and insights.</div></div>';
+  }
+
+  // Together rings
+  if (analyticsView === 'together') {
+    const myScore  = calcScore(getPath('dailyLogs/' + currentUser.uid + '/' + todayStr()) || {}, getPath('users/' + currentUser.uid + '/currentWeight') || 60);
+    const pScore   = calcScore(getPath('dailyLogs/' + partnerInfo.uid + '/' + todayStr()) || {}, getPath('users/' + partnerInfo.uid + '/currentWeight') || 60);
+    const circ = 2 * Math.PI * 27;
+    setRingDash('together-my-ring', myScore, circ);
+    setRingDash('together-partner-ring', pScore, circ);
+    document.getElementById('together-my-name').textContent = currentUser.name;
+    document.getElementById('together-partner-name').textContent = partnerInfo.name;
+  }
+}
+
+function setRingDash(id, pct, circ) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.setAttribute('stroke-dasharray', (pct/100*circ) + ' ' + (circ - pct/100*circ));
+}
+
+function drawSparkline(svgId, data, color) {
+  const svg = document.getElementById(svgId);
+  if (!svg || data.length < 2) return;
+  const W = 200, H = 48;
+  const max = Math.max(...data), min = Math.min(...data);
+  const range = max - min || 1;
+  const pts = data.map((v, i) => {
+    const x = (i / (data.length - 1)) * W;
+    const y = H - 8 - ((v - min) / range) * (H - 16);
+    return x + ',' + y;
+  }).join(' ');
+  svg.innerHTML = `
+    <polyline points="0,${H} ${pts} ${W},${H}" fill="${color}" fill-opacity=".12" stroke="none"/>
+    <polyline points="${pts}" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  `;
+}
+
+// ── MORE ──────────────────────────────────────────────────
+function renderMore() {
+  // My streaks
+  const st  = getPath('streaks/' + currentUser.uid) || {};
+  const pst = getPath('streaks/' + partnerInfo.uid) || {};
+  document.getElementById('my-streaks-title').textContent = currentUser.name + '\'s Streaks';
+  document.getElementById('partner-streaks-title').textContent = partnerInfo.name + '\'s Streaks';
+  document.getElementById('st-daily').textContent   = st.daily   || 0;
+  document.getElementById('st-gym').textContent     = st.gym     || 0;
+  document.getElementById('st-sugar').textContent   = st.noSugar || 0;
+  document.getElementById('st-running').textContent = st.runsThisWeek || 0;
+  document.getElementById('pst-daily').textContent   = pst.daily   || 0;
+  document.getElementById('pst-gym').textContent     = pst.gym     || 0;
+  document.getElementById('pst-sugar').textContent   = pst.noSugar || 0;
+  document.getElementById('pst-running').textContent = pst.runsThisWeek || 0;
+
+  // Achievements
+  const achs = [
+    { icon:'🔥', label:'7-Day Streak',     earned: (st.daily||0) >= 7 },
+    { icon:'⚡', label:'30-Day Streak',    earned: (st.daily||0) >= 30 },
+    { icon:'💪', label:'10 Gym Sessions',  earned: (st.gym||0)   >= 10 },
+    { icon:'🏃', label:'10 Runs',          earned: (st.runsThisWeek||0) >= 10 },
+    { icon:'🏆', label:'August Challenge', earned: new Date() > CHALLENGE_END },
+  ];
+  document.getElementById('achievements-list').innerHTML = achs.map(a =>
+    `<div class="ach" style="opacity:${a.earned?1:.4}">
+      <div class="ach-icon">${a.icon}</div>
+      <div><div class="ach-label">${a.label}</div><div class="ach-status">${a.earned?'Unlocked':'Locked'}</div></div>
+      ${a.earned ? '<div class="ach-badge">✓</div>' : ''}
+    </div>`
+  ).join('');
+
+  // Penalties
+  renderPenalties();
+
+  // Profile
+  const w = getPath('users/' + currentUser.uid + '/currentWeight');
+  document.getElementById('prof-avatar').textContent = currentUser.avatar;
+  document.getElementById('prof-avatar').style.background = currentUser.color;
+  document.getElementById('prof-name').textContent  = currentUser.name;
+  document.getElementById('prof-email').textContent = currentUser.email;
+  document.getElementById('prof-weight').textContent = (w || '—') + ' kg';
+
+  // Photos week label
+  document.getElementById('photos-week-label').textContent = 'Week of ' + fmtDate(getWeekId());
+  loadPhotos();
+}
+
+// ── PENALTIES ─────────────────────────────────────────────
+function renderPenalties() {
+  const penalties = getAll('penalties');
+  const unsettled = penalties.filter(p => !p.settled);
+  const sec = document.getElementById('penalties-section');
+
+  if (penalties.length === 0) {
+    sec.innerHTML = '<div class="card" style="text-align:center;padding:24px"><div style="font-size:32px;margin-bottom:8px">🎉</div><div style="font-family:\'DM Serif Display\',serif;font-size:18px;color:var(--espresso)">All settled up!</div><div style="font-size:13px;color:var(--text-soft);margin-top:4px">Keep hitting 85% to stay accountable.</div></div>';
+    return;
+  }
+
+  let html = '';
+  if (unsettled.length > 0) {
+    html += '<div class="pen-card mb-3"><div class="pen-title">Accountability Owed</div>';
+    unsettled.forEach(p => {
+      html += `<div style="padding:10px 0;border-bottom:1px solid var(--rose)">
+        <div style="font-size:13px;font-weight:600;color:var(--espresso)">${p.loser} owes ${p.winner} · Week of ${fmtDate(p.weekId||p.id)}</div>
+        <button class="btn" style="margin-top:8px" onclick="openSettle('${p.id}')">Mark as Settled</button>
+      </div>`;
+    });
+    html += '</div>';
+  }
+
+  html += '<div class="card"><div class="card-title">History</div>';
+  [...penalties].reverse().forEach(p => {
+    html += `<div style="padding:10px 0;border-bottom:1px solid var(--sand);display:flex;justify-content:space-between;align-items:center">
+      <div>
+        <div style="font-size:13px;font-weight:500;color:var(--espresso)">${p.loser} owed ${p.winner}</div>
+        <div style="font-size:11px;color:var(--text-soft)">Week of ${fmtDate(p.weekId||p.id)}</div>
+        ${p.note ? '<div style="font-size:12px;color:var(--text-mid);margin-top:2px;font-style:italic">"' + p.note + '"</div>' : ''}
+      </div>
+      <div style="font-size:11px;font-weight:600;padding:3px 10px;border-radius:20px;background:${p.settled?'var(--green)':'var(--amber)'};color:#fff">${p.settled?'Settled':'Pending'}</div>
+    </div>`;
+  });
+  html += '</div>';
+
+  // Win/loss record
+  const names = [currentUser.name, partnerInfo.name];
+  html += '<div class="duo" style="margin-top:12px">';
+  names.forEach(n => {
+    const wins   = penalties.filter(p => p.winner === n).length;
+    const losses = penalties.filter(p => p.loser  === n).length;
+    html += `<div class="card" style="text-align:center">
+      <div style="font-size:11px;color:var(--text-soft);margin-bottom:6px">${n}</div>
+      <div style="display:flex;justify-content:space-around">
+        <div><div style="font-family:'DM Serif Display',serif;font-size:24px;color:var(--green)">${wins}</div><div style="font-size:10px;color:var(--text-soft)">Wins</div></div>
+        <div><div style="font-family:'DM Serif Display',serif;font-size:24px;color:var(--red)">${losses}</div><div style="font-size:10px;color:var(--text-soft)">Losses</div></div>
+      </div>
+    </div>`;
+  });
+  html += '</div>';
+  sec.innerHTML = html;
+}
+
+function openSettle(id) {
+  pendingSettleId = id;
+  document.getElementById('settle-note').value = '';
+  document.getElementById('settle-modal').classList.add('open');
+}
+function confirmSettle() {
+  if (!pendingSettleId) return;
+  const note = document.getElementById('settle-note').value;
+  setPath('penalties/' + pendingSettleId, { settled: true, note, settledAt: new Date().toISOString() });
+  closeModal('settle-modal');
+  renderPenalties();
+  showToast('Outing settled ✓');
+}
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+// ── PROFILE ───────────────────────────────────────────────
+function updateWeight() {
+  const w = parseFloat(document.getElementById('prof-weight-in').value);
+  if (!w) return;
+  setPath('users/' + currentUser.uid, { currentWeight: w });
+  document.getElementById('prof-weight').textContent = w + ' kg';
+  document.getElementById('prof-protein-hint').textContent = 'New protein target: ' + proteinGoal(w) + 'g/day';
+  showToast('Weight updated ✓');
+  renderHome();
+}
+
+// ── PHOTOS ────────────────────────────────────────────────
+function pickPhoto(slot) {
+  currentPhotoSlot = slot;
+  document.getElementById('photo-input').click();
+}
+
+function photoChosen(e) {
+  const file = e.target.files[0]; if (!file) return;
+  const canvas = document.createElement('canvas');
+  const img = new Image();
+  img.onload = () => {
+    const MAX = 800;
+    let w = img.width, h = img.height;
+    if (w > h) { if (w > MAX) { h = h * MAX / w; w = MAX; } }
+    else { if (h > MAX) { w = w * MAX / h; h = MAX; } }
+    canvas.width = w; canvas.height = h;
+    canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+    const dataUrl = canvas.toDataURL('image/jpeg', 0.75);
+    const key = 'photos/' + currentUser.uid + '/' + getWeekId() + '/' + currentPhotoSlot;
+    setPath(key, dataUrl, false);
+    const slot = document.getElementById('photo-' + currentPhotoSlot);
+    slot.innerHTML = '<img src="' + dataUrl + '" alt="' + currentPhotoSlot + '"/>';
+    showToast('Photo saved ✓');
+  };
+  img.src = URL.createObjectURL(file);
+  e.target.value = '';
+}
+
+function loadPhotos() {
+  const poses = ['front','side','back'];
+  poses.forEach(p => {
+    const key = 'photos/' + currentUser.uid + '/' + getWeekId() + '/' + p;
+    const dataUrl = getPath(key);
+    const slot = document.getElementById('photo-' + p);
+    if (dataUrl) slot.innerHTML = '<img src="' + dataUrl + '" alt="' + p + '"/>';
+    else slot.innerHTML = '<span>+</span><span class="photo-slot-lbl">' + p.charAt(0).toUpperCase() + p.slice(1) + '</span>';
+  });
+}
+
+// ── NOTIFICATIONS ─────────────────────────────────────────
+function enableNotifs() {
+  if (!('Notification' in window)) { showToast('Notifications not supported in this browser'); return; }
+  Notification.requestPermission().then(p => {
+    showToast(p === 'granted' ? 'Notifications enabled ✓' : 'Go to Settings → Notifications to enable');
+  });
+}
+
+function scheduleReminders() {
+  // In-app timed reminders (when app is open)
+  setInterval(() => {
+    const h = new Date().getHours(), m = new Date().getMinutes();
+    const uid = currentUser?.uid;
+    if (!uid) return;
+
+    // 8 PM reminder
+    if (h === 20 && m === 0) {
+      showToast('⏰ Check your progress for today');
+    }
+    // 9 PM partner nudge
+    if (h === 21 && m === 0) {
+      const partnerLog = getPath('dailyLogs/' + partnerInfo?.uid + '/' + todayStr());
+      if (!partnerLog) showToast('👀 ' + (partnerInfo?.name || 'Partner') + ' hasn\'t logged yet');
+    }
+    // 10 PM final reminder
+    if (h === 22 && m === 0) {
+      const myLog = getPath('dailyLogs/' + uid + '/' + todayStr());
+      if (!myLog) showToast('📋 Complete today\'s check-in before midnight!');
+    }
+  }, 60000); // check every minute
+}
+
+// ── WEEKLY PENALTY CHECK (auto, runs on load) ─────────────
+function checkWeeklyPenalty() {
+  if (!currentUser) return;
+  const today = new Date();
+  if (today.getDay() !== 0) return; // only Sunday
+  const weekId = getWeekId();
+  const existing = getPath('penalties/' + weekId);
+  if (existing) return; // already processed
+
+  // Count days below 85% for each user this week
+  let myFails = 0, partnerFails = 0;
+  for (let i = 1; i <= 7; i++) {
+    const d = new Date(weekId + 'T00:00:00');
+    d.setDate(d.getDate() + i);
+    if (d > today) break;
+    const ds = d.toISOString().split('T')[0];
+    const myLog = getPath('dailyLogs/' + currentUser.uid + '/' + ds) || {};
+    const pLog  = getPath('dailyLogs/' + partnerInfo.uid + '/' + ds) || {};
+    const myW   = getPath('users/' + currentUser.uid + '/currentWeight') || 60;
+    const pW    = getPath('users/' + partnerInfo.uid + '/currentWeight') || 60;
+    if (calcScore(myLog, myW) < 85) myFails++;
+    if (calcScore(pLog, pW) < 85) partnerFails++;
+  }
+
+  if (myFails > 1 || partnerFails > 1) {
+    const loser  = myFails > partnerFails ? currentUser.name : partnerInfo.name;
+    const winner = myFails > partnerFails ? partnerInfo.name : currentUser.name;
+    setPath('penalties/' + weekId, { loser, winner, weekId, settled: false, createdAt: new Date().toISOString() }, false);
+  }
+}
+
+// ── CLOSE MODALS ON BG CLICK ──────────────────────────────
+document.querySelectorAll('.modal-bg').forEach(bg => {
+  bg.addEventListener('click', e => { if (e.target === bg) bg.classList.remove('open'); });
+});
+
+// Run on load
+setTimeout(checkWeeklyPenalty, 2000);
+</script>
+</body>
+</html>
